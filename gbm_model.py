@@ -86,7 +86,6 @@ def add_features(df, is_fitted = False):
     
     url_vecs = pd.DataFrame(vectorize(df['stemmed'], is_fitted))
     df = pd.concat([df, url_vecs], axis=1)
-    df.drop(['url', 'stemmed'], axis=1, inplace=True)
     return df
     
     
@@ -103,6 +102,15 @@ def split(df, random_state=42):
                                               random_state = random_state,
                                               test_size = 0.5,
                                               stratify=temp_labels)
+    
+    train_text[['url', 'label']].to_csv('data/train.csv', index=False)
+    test_text[['url', 'label']].to_csv('data/test.csv', index=False)
+    val_text[['url', 'label']].to_csv('data/val.csv', index=False)
+    
+    train_text.drop(['url', 'stemmed'], axis=1, inplace=True)
+    test_text.drop(['url', 'stemmed'], axis=1, inplace=True)
+    val_text.drop(['url', 'stemmed'], axis=1, inplace=True)
+    
     
     return train_text.drop(['label'], axis=1), \
            train_labels, \
